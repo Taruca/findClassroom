@@ -1,5 +1,4 @@
 <?php
-	require_once 'smtp.php';
 
  	$ch = curl_init();
 
@@ -67,80 +66,75 @@
         $mANFlag = hasSameClass($classroom['ma'], $classroom['an'], $classroom['man']);
         
         //根据数组拼字符串
-        $classroomStr = "今天教三的自习室分布情况：\n";
+        $classroomStr = "<strong>今天教三的自习室分布情况：</strong><br>";
         if ($mANFlag) {
-        	$classroomStr .= "全天都没有课的自习室有：";
+        	$classroomStr .= "全天都没有课的自习室有：<br>";
         	foreach ($classroom['man'] as $key => $value) {
-        		$classroomStr .= $value .',';
+        		$classroomStr .= "<strong>" .$value ."</strong>" .',';
         	}
         	$classroomStr = substr($classroomStr, 0, strlen($classroomStr) - 1);
-        	$classroomStr .= "；\n";
+        	$classroomStr .= "；<br>";
         } 
         if ($mAFlag) {
-        	$classroomStr .= "上午和下午没有课的自习室有：";
+        	$classroomStr .= "上午和下午没有课的自习室有：<br>";
         	foreach ($classroom['ma'] as $key => $value) {
-        		$classroomStr .= $value .',';
+        		$classroomStr .= "<strong>" .$value ."</strong>" .',';
         	}
         	$classroomStr = substr($classroomStr, 0, strlen($classroomStr) - 1);
-        	$classroomStr .= "；\n";
+        	$classroomStr .= "；<br>";
         } 
         if($aNFlag) {
-        	$classroomStr .= "下午和晚上都没有课的自习室有：";
+        	$classroomStr .= "下午和晚上都没有课的自习室有：<br>";
         	foreach ($classroom['an'] as $key => $value) {
-        		$classroomStr .= $value .',';
+        		$classroomStr .= "<strong>" .$value ."</strong>" .',';
         	}
         	$classroomStr = substr($classroomStr, 0, strlen($classroomStr) - 1);
-        	$classroomStr .= "；\n";
+        	$classroomStr .= "；<br>";
         } 
         if($morningFlag) {
-        	$classroomStr .= "上午没有课的自习室有：";
+        	$classroomStr .= "上午没有课的自习室有：<br>";
         	foreach ($suitableClassroom['morning'] as $key => $value) {
-        		$classroomStr .= $value .',';
+        		$classroomStr .= "<strong>" .$value ."</strong>" .',';
         	}
         	$classroomStr = substr($classroomStr, 0, strlen($classroomStr) - 1);
-        	$classroomStr .= "；\n";
+        	$classroomStr .= "；<br>";
         } 
         if($afternoonFlag) {
-        	$classroomStr .= "下午没有课的自习室有：";
+        	$classroomStr .= "下午没有课的自习室有：<br>";
         	foreach ($suitableClassroom['afternoon'] as $key => $value) {
-        		$classroomStr .= $value .',';
+        		$classroomStr .= "<strong>" .$value ."</strong>" .',';
         	}
         	$classroomStr = substr($classroomStr, 0, strlen($classroomStr) - 1);
-        	$classroomStr .= "；\n";
+        	$classroomStr .= "；<br>";
         } 
         if($nightFlag) {
-        	$classroomStr .= "晚上没有课的自习室有：";
+        	$classroomStr .= "晚上没有课的自习室有：<br>";
         	foreach ($suitableClassroom['night'] as $key => $value) {
-        		$classroomStr .= $value .',';
+        		$classroomStr .= "<strong>" .$value ."</strong>" .',';
         	}
         	$classroomStr = substr($classroomStr, 0, strlen($classroomStr) - 1);
-        	$classroomStr .= "；\n";
+        	$classroomStr .= "；<br>";
         }
+		$classroomStr .= "第九节课没有课的教室有：<br>";
+		foreach ($classroomArr[4][3] as $key => $value) {
+			$classroomStr .= "<strong>" .$value ."</strong>" .',';
+		}
+		$classroomStr = substr($classroomStr, 0, strlen($classroomStr) - 1);
+		$classroomStr .= "；<br>";
 
-        $emailStr = "今天是" .$dateStr ."\n";
-        if (!($mANFlag || $mAFlag || $aNFlag || $morningFlag || $afternoonFlag || $nightFlag)) {
-        	$emailStr .= '今天没有连续的自习室，去教务找找其他教学楼吧。';
-        } else {
-			$emailStr .= $classroomStr;
-        }
-        $emailStr .= '教务网站:http://jwxt.bupt.edu.cn/zxqDtKxJas.jsp';
-        echo "$emailStr";
+        $emailStr = "今天是" .$dateStr ."<br>";
+		$emailStr .= "<hr>";
 
-		/**
-		 *实例化邮件类
-		 */
-		$smtpserver = "smtp.163.com";              //SMTP服务器
-		$smtpserverport = 25;                      //SMTP服务器端口
-		$smtpusermail = "liuziyang_lzy@163.com";      //SMTP服务器的用户邮箱
-		$smtpemailto = "395158242@qq.com";       //发送给谁
-		$smtpuser = "liuziyang_lzy@163.com";         //SMTP服务器的用户帐号
-		$smtppass = "wy2716190";                 //SMTP服务器的用户密码
-		$mailsubject = "测试邮件系统";        //邮件主题
-		$mailbody = "<h1>你的用户名是张三，密码是123147mcl </h1>";      //邮件内容
-		$mailtype = "HTML";                      //邮件格式（HTML/TXT）,TXT为文本邮件
-		$smtp = new smtp($smtpserver, $smtpserverport, true, $smtpuser, $smtppass);
-		$smtp->debug = true;                     //是否显示发送的调试信息
-		$smtp->sendmail($smtpemailto, $smtpusermail, $mailsubject, $mailbody, $mailtype);
+		$emailStr .= $classroomStr;
+		$emailStr .= '<hr>';
+		$emailStr .= "<strong>详细课程情况：</strong><br>";
+		$emailStr .= $htmlStr;
+		$emailStr .= '<hr>';
+        $emailStr .= '教务网站: <a>http://jwxt.bupt.edu.cn/zxqDtKxJas.jsp</a>';
+
+//		$toAddress = 'fujiale1993@163.com';
+		$toAddress = '395158242@qq.com';
+		echo sendMail($emailStr, $toAddress);
 	}
 
 	//获取从$sMark开始到$sMark后最后一个$eMark为止的字符串
@@ -179,7 +173,40 @@
 	{
 		$date = date('Y-m-d');
 		$dateArr = explode('-', $date);
-		$dateStr = $dateArr[0] .'年' .$dateArr[1] .'月' .$dateArr[2] .'日';
-		return $dateStr;;
+		$dateStr = '<font color=red>' .$dateArr[0] .'</font>' .'年' .'<font color=red>' .$dateArr[1] .'</font>' .'月' .'<font color=red>' .$dateArr[2] .'</font>' .'日';
+		return $dateStr;
 	}
-?>
+
+	function sendMail($content, $toAddress) {
+		header("content-type:text/html;charset=utf-8");
+		ini_set("magic_quotes_runtime",0);
+		require_once 'class.phpmailer.php';
+
+		try {
+			$mail = new PHPMailer(true);
+			$mail->IsSMTP();
+			$mail->CharSet='UTF-8'; //设置邮件的字符编码，这很重要，不然中文乱码
+			$mail->SMTPAuth   = true;                  //开启认证
+			$mail->Port       = 25;
+			$mail->Host       = "smtp.163.com";
+			$mail->Username   = "liuziyang_lzy@163.com";
+			$mail->Password   = "wy2716190";
+			//$mail->IsSendmail(); //如果没有sendmail组件就注释掉，否则出现“Could  not execute: /var/qmail/bin/sendmail ”的错误提示
+			$mail->AddReplyTo("liuziyang_lzy@163.com","lzy");//回复地址
+			$mail->From       = "liuziyang_lzy@163.com";
+			$mail->FromName   = "刘子阳";
+			$to = $toAddress;
+			$mail->AddAddress($to);
+			$mail->Subject  = "亲爱滴";
+			$mail->Body = $content;
+//			$mail->Body = '<h1>phpmail演示</h1>这是php点点通（<font color=red>www.phpddt.com</font>）对phpmailer的测试内容<br>aaa';
+			$mail->AltBody    = "To view the message, please use an HTML compatible email viewer!"; //当邮件不支持html时备用显示，可以省略
+			$mail->WordWrap   = 80; // 设置每行字符串的长度
+			//$mail->AddAttachment("f:/test.png");  //可以添加附件
+			$mail->IsHTML(true);
+			$mail->Send();
+			return '邮件已发送';
+		} catch (phpmailerException $e) {
+			return "邮件发送失败：".$e->errorMessage();
+		}
+	}
